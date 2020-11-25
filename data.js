@@ -1,9 +1,46 @@
-const emojiCollectorData = {
+const EmojiCatcherData = {
+	bugEmoji: {
+		emoji: '🐛',
+		chance: 1,
+		title: 'You found a bug, consider reporting :]',
+		points: 1
+	},
 	emojis: [
 		{
 			emoji: '🦄',
-			chance: 100,
-			title: 'The Majestic'
+			chance: 500,
+			title: 'The Majestic',
+			points: 10
+		},
+		{
+			emoji: '🍪',
+			chance: 400,
+			title: 'Clicker',
+			points: 10
+		},
+		{
+			emoji: '😀',
+			chance: 90,
+			title: 'OG',
+			points: 50
+		},
+		{
+			emoji: '😎',
+			chance: 8,
+			title: 'Coooool',
+			points: 100
+		},
+		{
+			emoji: '💸',
+			chance: 1,
+			title: 'Cha-Ching',
+			points: 10000
+		},
+		{
+			emoji: '👑',
+			chance: 1,
+			title: 'Royalty',
+			points: 10000
 		}
 	],
 	achievements: [
@@ -12,13 +49,13 @@ const emojiCollectorData = {
 				check: 'points',
 				for: 100
 			},
-			text: 'On the board: winnig 100 points',
+			text: 'On the board: winning 100 points',
 			icon: '🥉'
 		},
 		{
 			condition: {
 				check: 'emoji',
-				type: '🍪'
+				type: '🍪',
 				for: 10
 			},
 			text: 'Master-baker: collecting 10 cookies',
@@ -29,7 +66,7 @@ const emojiCollectorData = {
 				check: 'types',
 				for: 10
 			},
-			text: 'Slowly but surely: collecting 10 diffrent types',
+			text: 'Slowly but surely: collecting 10 different types',
 			icon: '☝️'
 		}
 	]
