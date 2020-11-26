@@ -1,11 +1,24 @@
+
+const EmojiCatcherSavedDataTemplate = {
+	emojis: [],
+	points: 0,
+	achievements: []
+}
+
 const EmojiCatcherData = {
 	bugEmoji: {
 		emoji: '🐛',
-		chance: 1,
+		chance: 0,
 		title: 'You found a bug, consider reporting :]',
 		points: 1
 	},
 	emojis: [
+		{
+			emoji: '🐛',
+			chance: 0,
+			title: 'You found a bug, consider reporting :]',
+			points: 1
+		},
 		{
 			emoji: '🦄',
 			chance: 500,
@@ -54,7 +67,7 @@ const EmojiCatcherData = {
 		},
 		{
 			condition: {
-				check: 'emoji',
+				check: 'emojis',
 				type: '🍪',
 				for: 10
 			},
