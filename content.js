@@ -1,23 +1,11 @@
 const EmojiCatcher = {};
 
-document.head.innerHTML += `<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">`;
-
-EmojiCatcher.style = document.querySelector("#EmojiCatcherStyle");
-if (!EmojiCatcher.style) {
-  EmojiCatcher.style = document.createElement("style");
-  EmojiCatcher.style.setAttribute("id", "EmojiCatcherStyle");
-  document.head.appendChild(EmojiCatcher.style);
-}
-
-EmojiCatcher.totalChance = EmojiCatcherData.emojis.reduce(
-  (accumulator, emoji) => {
-    let accumulatorNum = Number.isInteger(accumulator)
-      ? accumulator
-      : accumulator.chance;
-    return accumulatorNum + emoji.chance;
-  }
+// Adding font
+EmojiCatcher.font = new FontFace(
+  "Press Start 2P",
+  "url('https://fonts.gstatic.com/s/pressstart2p/v9/e3t4euO8T-267oIAQAu6jDQyK3nVivNm4I81.woff2')"
 );
+document.fonts.add(EmojiCatcher.font);
 
 EmojiCatcher.sortedEmojis = EmojiCatcherData.emojis.sort(
   (a, b) => b.chance - a.chance
@@ -27,33 +15,23 @@ EmojiCatcher.init = () => {
   // Click listener
   document.addEventListener("click", (e) => {
     const clickedContainer = e.target.parentElement;
-    if (clickedContainer.getAttribute("id") === "EmojiCatcherGameElement") {
+    if (
+      clickedContainer &&
+      clickedContainer.getAttribute("id") === "EmojiCatcherGameElement"
+    ) {
       EmojiCatcher.handleEmojiClick(
         clickedContainer.getAttribute("data-emoji")
       );
     }
   });
 
-  // Tests
-//   EmojiCatcher.createEmoji(EmojiCatcher.getEmojiObjByChance());
-  setInterval(() => {
-    EmojiCatcher.createEmoji(EmojiCatcher.getEmojiObjByChance());
-  }, 1000 * 180);
-
-  //   EmojiCatcher.chanceTester(1000);
-};
-
-EmojiCatcher.getEmojiObjByChance = () => {
-  let chanceCount = 0;
-  let chanceSelectedNum = Math.random() * EmojiCatcher.totalChance;
-  for (const emoji of EmojiCatcher.sortedEmojis) {
-    if (chanceSelectedNum <= emoji.chance + chanceCount) {
-      return emoji;
+  // Msg listener
+  chrome.runtime.onMessage.addListener((req, _sender) => {
+    console.log("msg: ", req);
+    if (req.action === "create") {
+      EmojiCatcher.createEmoji(EmojiCatcher.getEmojiObjByEmoji(req.emoji));
     }
-    chanceCount += emoji.chance;
-  }
-
-  return EmojiCatcherData.bugEmoji;
+  });
 };
 
 EmojiCatcher.getEmojiObjByEmoji = (emoji) => {
@@ -119,10 +97,9 @@ EmojiCatcher.createEmoji = (emojiObj = EmojiCatcherData.bugEmoji) => {
         <div class="emojiPoints">+${emojiObj.points}</div>
     `;
 
-  EmojiCatcher.initialTimeout = setTimeout(
-    () => EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove(),
-    10000
-  );
+  EmojiCatcher.initialTimeout = setTimeout(() => {
+    EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove();
+  }, 10000);
 };
 
 EmojiCatcher.handleEmojiClick = (emoji) => {
@@ -137,124 +114,37 @@ EmojiCatcher.handleEmojiClick = (emoji) => {
   EmojiCatcher.getAndSaveEmojiClick(emoji);
 };
 
-EmojiCatcher.saveEmojiClick = (emoji) => {
-  const emojiObj = EmojiCatcher.getEmojiObjByEmoji(emoji);
-  EmojiCatcher.savedData.emojis.push(emoji);
-  (EmojiCatcher.savedData.points += emojiObj.points), 0;
-  EmojiCatcher.savedData.achievements = [
-    ...EmojiCatcher.savedData.achievements,
-    ...EmojiCatcher.getNewAchievements(),
-  ];
-  EmojiCatcher.setSavedData();
-};
-
 EmojiCatcher.getAndSaveEmojiClick = (emoji) => {
-  chrome.storage.sync.get(
-    ["EmojiCatcherSavedData"],
-    (result) => {
-        EmojiCatcher.savedData = result.EmojiCatcherSavedData
-        if (!EmojiCatcher.savedData) {
-            EmojiCatcher.savedData = EmojiCatcherSavedDataTemplate;
-        }
-        EmojiCatcher.saveEmojiClick(emoji);
-    }
-  );
+  EmojiCatcher.getSavedData(() => {
+    const emojiObj = EmojiCatcher.getEmojiObjByEmoji(emoji);
+    EmojiCatcher.savedData.emojis.push(emoji);
+    (EmojiCatcher.savedData.points += emojiObj.points), 0;
+    EmojiCatcher.savedData.achievements = [
+      ...EmojiCatcher.savedData.achievements,
+      ...EmojiCatcher.getNewAchievements(),
+    ];
+    EmojiCatcher.setSavedData();
+  });
 };
 
-EmojiCatcher.setSavedData = () => {
+// Storage functions
+
+EmojiCatcher.getSavedData = (returnFunction = () => {}) => {
+  chrome.storage.sync.get(["EmojiCatcherSavedData"], (result) => {
+    EmojiCatcher.savedData = result.EmojiCatcherSavedData;
+    if (!EmojiCatcher.savedData) {
+      EmojiCatcher.savedData = EmojiCatcherSavedDataTemplate;
+    }
+    returnFunction();
+  });
+};
+
+EmojiCatcher.setSavedData = (returnFunction = () => {}) => {
   chrome.storage.sync.set(
     { EmojiCatcherSavedData: EmojiCatcher.savedData },
-    () => {}
+    returnFunction
   );
   console.log("saved", EmojiCatcher.savedData);
-};
-
-chrome.storage.sync.get(["EmojiCatcherSavedData"], function (result) {
-  if (!!result.isEmojiChanged) {
-    chrome.storage.sync.get(["ClicksOfUnicornsEmoji"], function (result) {
-      ClicksOfUnicorns.emoji = result.ClicksOfUnicornsEmoji;
-    });
-  }
-});
-
-// CSS
-
-EmojiCatcher.style.innerHTML = `
-    #EmojiCatcherGameElement {
-        position: fixed;
-        top: 200px;
-        left: 200px;
-        z-index: 2147483647;
-        opacity: 0;
-        animation: emojiCatcherShow 10s linear 1;
-    }
-    #EmojiCatcherGameElement .emojiBtn {
-        font-size: 40px;
-        cursor: pointer;
-        animation: emojiCatcherRotate 10s linear 1;
-    }
-    #EmojiCatcherGameElement .emojiPoints {
-        font-family: 'Press Start 2P';
-        display: none;
-        font-size: 40px;
-        color: #fafafa;
-        -webkit-text-stroke: 2px #9e9e9e;
-    }
-    #EmojiCatcherGameElement.clicked {
-        animation: emojiCatcherFloat 1s linear 1;
-    }
-    #EmojiCatcherGameElement.clicked .emojiBtn {
-        display: none;
-    }
-    #EmojiCatcherGameElement.clicked .emojiPoints {
-        display: block;
-    }
-
-    @keyframes emojiCatcherShow {
-        0% {
-            opacity: 0;
-        }
-        10%, 90% {
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-        }
-    }
-
-    @keyframes emojiCatcherRotate {
-        0% {
-            transform: rotate(0deg);
-        }
-        100% {
-            transform: rotate(-360deg);
-        }
-    }
-
-    @keyframes emojiCatcherFloat {
-        0% {
-            opacity: 1;
-        }
-        75% {
-            opacity: 1;
-            transform: translate(0, -37.5px);
-        }
-        100% {
-            opacity: 0;
-            transform: translate(0, -50px);
-        }
-    }
-`;
-
-EmojiCatcher.chanceTester = (num) => {
-  const emojisArr = {};
-  for (let i = 0; i < num; i++) {
-    const selected = EmojiCatcher.getEmojiObjByChance();
-    emojisArr[selected.chance + selected.title] =
-      (emojisArr[selected.chance + selected.title] || 0) + 1;
-  }
-
-  console.log("chance test: ", emojisArr);
 };
 
 EmojiCatcher.init();

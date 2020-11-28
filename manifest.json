@@ -1,26 +1,28 @@
 {
-    "name": "Emoji Catcher",
-    "version": "1.0",
-    "version_name": "1.0 Emoji Catcher",
-    "description": "Catch all of the Emojis",
-    "manifest_version": 2,
-    "icons": { 
-        "16": "200.png",
-        "48": "200.png",
-        "128": "200.png" 
-    },
-    "content_scripts": [
-        {
-            "matches": ["<all_urls>"],
-            "js": ["data.js", "content.js"]
-        }
-    ],
-    "browser_action": {
-        "default_popup": "popup.html",
-        "default_title": "Emoji Catcher"
-    },
-    "permissions": [
-        "activeTab",
-        "storage"
-    ]
+  "name": "Emoji Catcher",
+  "version": "1.0",
+  "version_name": "1.0 Emoji Catcher",
+  "description": "Catch all of the Emojis",
+  "manifest_version": 2,
+  "icons": {
+    "16": "200.png",
+    "48": "200.png",
+    "128": "200.png"
+  },
+  "background": {
+    "scripts": ["data.js", "background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["main.css"],
+      "js": ["data.js", "content.js"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Emoji Catcher"
+  },
+  "permissions": ["activeTab", "storage"]
 }

@@ -1,0 +1,64 @@
+#EmojiCatcherGameElement {
+    position: fixed;
+    top: 200px;
+    left: 200px;
+    z-index: 2147483647;
+    opacity: 0;
+    animation: emojiCatcherShow 10s linear 1;
+}
+#EmojiCatcherGameElement .emojiBtn {
+    font-size: 40px;
+    cursor: pointer;
+    animation: emojiCatcherRotate 10s linear 1;
+}
+#EmojiCatcherGameElement .emojiPoints {
+    font-family: 'Press Start 2P';
+    display: none;
+    font-size: 40px;
+    color: #fafafa;
+    -webkit-text-stroke: 2px #9e9e9e;
+}
+#EmojiCatcherGameElement.clicked {
+    animation: emojiCatcherFloat 1s linear 1;
+}
+#EmojiCatcherGameElement.clicked .emojiBtn {
+    display: none;
+}
+#EmojiCatcherGameElement.clicked .emojiPoints {
+    display: block;
+}
+
+@keyframes emojiCatcherShow {
+    0% {
+        opacity: 0;
+    }
+    10%, 90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes emojiCatcherRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes emojiCatcherFloat {
+    0% {
+        opacity: 1;
+    }
+    75% {
+        opacity: 1;
+        transform: translate(0, -37.5px);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(0, -50px);
+    }
+}
