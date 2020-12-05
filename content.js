@@ -7,10 +7,6 @@ EmojiCatcher.font = new FontFace(
 );
 document.fonts.add(EmojiCatcher.font);
 
-EmojiCatcher.sortedEmojis = EmojiCatcherData.emojis.sort(
-  (a, b) => b.chance - a.chance
-);
-
 EmojiCatcher.init = () => {
   // Click listener
   document.addEventListener("click", (e) => {
@@ -28,50 +24,13 @@ EmojiCatcher.init = () => {
   // Msg listener
   chrome.runtime.onMessage.addListener((req, _sender) => {
     console.log("msg: ", req);
-    if (req.action === "create") {
-      EmojiCatcher.createEmoji(EmojiCatcher.getEmojiObjByEmoji(req.emoji));
-    }
+    EmojiCatcher.handleMessage(req);
   });
 };
 
-EmojiCatcher.getEmojiObjByEmoji = (emoji) => {
-  return (
-    EmojiCatcher.sortedEmojis.find((eo) => eo.emoji === emoji) ||
-    EmojiCatcherData.bugEmoji
-  );
-};
-
-EmojiCatcher.getNewAchievements = () => {
-  const newAchievements = [];
-  const savedIcons = EmojiCatcher.savedData.achievements.map((a) => a.icon);
-  const potential = EmojiCatcherData.achievements.filter(
-    (a) => !savedIcons.includes(a.icon)
-  );
-  for (const achievement of potential) {
-    if (EmojiCatcher.checkAchievement(achievement)) {
-      newAchievements.push({ icon: achievement.icon, text: achievement.text });
-    }
-  }
-
-  return newAchievements;
-};
-
-EmojiCatcher.checkAchievement = (achievement) => {
-  switch (achievement.condition.check) {
-    case "points":
-      return achievement.condition.for <= EmojiCatcher.savedData.points;
-    case "emojis":
-      const emojiCount = EmojiCatcher.savedData.emojis.filter(
-        (emoji) => emoji === achievement.condition.type
-      ).length;
-      return achievement.condition.for <= emojiCount;
-    case "types":
-      const uniqueEmojis = EmojiCatcher.savedData.emojis.filter(
-        (v, i, a) => a.indexOf(v) === i
-      );
-      return achievement.condition.for <= uniqueEmojis;
-    default:
-      return false;
+EmojiCatcher.handleMessage = (req) => {
+  if (req.action === "create") {
+    EmojiCatcher.createEmoji(req.emoji);
   }
 };
 
@@ -97,12 +56,14 @@ EmojiCatcher.createEmoji = (emojiObj = EmojiCatcherData.bugEmoji) => {
         <div class="emojiPoints">+${emojiObj.points}</div>
     `;
 
+  EmojiCatcher.DateTimeWhenCreated = new Date().getTime();
   EmojiCatcher.initialTimeout = setTimeout(() => {
     EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove();
   }, 10000);
 };
 
 EmojiCatcher.handleEmojiClick = (emoji) => {
+  EmojiCatcher.msUntilClick = new Date().getTime() - EmojiCatcher.DateTimeWhenCreated;
   EmojiCatcher.emojiElement.classList.add("clicked");
   clearTimeout(EmojiCatcher.initialTimeout);
   setTimeout(
@@ -110,41 +71,8 @@ EmojiCatcher.handleEmojiClick = (emoji) => {
     1000
   );
 
-  console.log(emoji);
-  EmojiCatcher.getAndSaveEmojiClick(emoji);
-};
-
-EmojiCatcher.getAndSaveEmojiClick = (emoji) => {
-  EmojiCatcher.getSavedData(() => {
-    const emojiObj = EmojiCatcher.getEmojiObjByEmoji(emoji);
-    EmojiCatcher.savedData.emojis.push(emoji);
-    (EmojiCatcher.savedData.points += emojiObj.points), 0;
-    EmojiCatcher.savedData.achievements = [
-      ...EmojiCatcher.savedData.achievements,
-      ...EmojiCatcher.getNewAchievements(),
-    ];
-    EmojiCatcher.setSavedData();
-  });
-};
-
-// Storage functions
-
-EmojiCatcher.getSavedData = (returnFunction = () => {}) => {
-  chrome.storage.sync.get(["EmojiCatcherSavedData"], (result) => {
-    EmojiCatcher.savedData = result.EmojiCatcherSavedData;
-    if (!EmojiCatcher.savedData) {
-      EmojiCatcher.savedData = EmojiCatcherSavedDataTemplate;
-    }
-    returnFunction();
-  });
-};
-
-EmojiCatcher.setSavedData = (returnFunction = () => {}) => {
-  chrome.storage.sync.set(
-    { EmojiCatcherSavedData: EmojiCatcher.savedData },
-    returnFunction
-  );
-  console.log("saved", EmojiCatcher.savedData);
+  console.log(emoji, EmojiCatcher.msUntilClick);
+  chrome.runtime.sendMessage({ action: "click", emoji: emoji, msUntilClick: EmojiCatcher.msUntilClick });
 };
 
 EmojiCatcher.init();

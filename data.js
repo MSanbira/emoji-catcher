@@ -2,7 +2,13 @@
 const EmojiCatcherSavedDataTemplate = {
 	emojis: [],
 	points: 0,
-	achievements: []
+	achievements: [],
+	stats: {
+		avgTimeToClick: 0,
+		lastSecClick: 0,
+		firstSecClick: 0,
+		emojiMissed: 0,
+	}
 }
 
 const EmojiCatcherData = {
@@ -17,43 +23,50 @@ const EmojiCatcherData = {
 			emoji: '🐛',
 			chance: 0,
 			title: 'You found a bug, consider reporting :]',
-			points: 1
+			points: 1,
+			rareStatus: 'Rare'
 		},
 		{
 			emoji: '🦄',
 			chance: 500,
 			title: 'The Majestic',
-			points: 10
+			points: 10,
+			rareStatus: 'Rare'
 		},
 		{
 			emoji: '🍪',
 			chance: 400,
 			title: 'Clicker',
-			points: 10
+			points: 10,
+			rareStatus: 'Rare'
 		},
 		{
 			emoji: '😀',
 			chance: 90,
 			title: 'OG',
-			points: 50
+			points: 50,
+			rareStatus: 'Rare'
 		},
 		{
 			emoji: '😎',
 			chance: 8,
 			title: 'Coooool',
-			points: 100
+			points: 100,
+			rareStatus: 'Rare'
 		},
 		{
 			emoji: '💸',
 			chance: 1,
 			title: 'Cha-Ching',
-			points: 10000
+			points: 10000,
+			rareStatus: 'Rare'
 		},
 		{
 			emoji: '👑',
 			chance: 1,
 			title: 'Royalty',
-			points: 10000
+			points: 10000,
+			rareStatus: 'Rare'
 		}
 	],
 	achievements: [
