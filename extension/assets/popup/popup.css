@@ -1,14 +1,16 @@
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   box-sizing: border-box; }
 
 :root {
-  --primary-color: #4624F1;
-  --secondary-color: #C8BDFF;
-  --black-color: #221F1F;
+  --primary-color: #4624f1;
+  --secondary-color: #c8bdff;
+  --black-color: #221f1f;
   --white-color: #fff;
-  --light-grey-color: #F1F1F1;
-  --medium-grey-color: #E6E6E6;
-  --dark-grey-color: #D9D9D9;
+  --light-grey-color: #f1f1f1;
+  --medium-grey-color: #e6e6e6;
+  --dark-grey-color: #d9d9d9;
   --dark-grey-color-50: #d9d9d980;
   --text-grey-color: #868589; }
 
@@ -18,14 +20,14 @@ body {
   width: 800px;
   height: 600px;
   color: var(--black-color);
-  font-family: 'Press Start 2P', sans-serif; }
+  font-family: "Press Start 2P", sans-serif; }
 
 h2 {
   font-size: 24px;
-  font-family: 'Bebas Neue', sans-serif; }
+  font-family: "Bebas Neue", sans-serif; }
 
 .babes-font {
-  font-family: 'Bebas Neue', sans-serif; }
+  font-family: "Bebas Neue", sans-serif; }
 
 .icon-btn {
   border: solid 2px var(--primary-color);
@@ -48,7 +50,7 @@ h2 {
   border: solid 2px var(--white-color);
   color: var(--white-color);
   font-size: 24px;
-  font-family: 'Bebas Neue', sans-serif; }
+  font-family: "Bebas Neue", sans-serif; }
   .btn img:first-child {
     margin-right: 8px;
     height: 20px; }
@@ -57,7 +59,7 @@ h2 {
   display: grid;
   grid-template-columns: 460px auto;
   grid-template-rows: 68px auto 68px;
-  height: 100%;
+  height: 600px;
   width: 100%; }
   #mainDisplay .points-section {
     display: flex;
@@ -81,6 +83,7 @@ h2 {
   #mainDisplay .emojis-display {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
+    overflow-y: auto;
     margin: 16px 0;
     padding: 0 16px;
     border-right: solid 2px var(--dark-grey-color-50); }
@@ -104,8 +107,11 @@ h2 {
         #mainDisplay .emojis-display .emojis-grid .emoji .icon {
           font-size: 24px;
           margin-bottom: 8px; }
-        #mainDisplay .emojis-display .emojis-grid .emoji[data-description]::before, #mainDisplay .emojis-display .emojis-grid .emoji[data-rare-status]::after {
-          content: attr(data-description);
+          #mainDisplay .emojis-display .emojis-grid .emoji .icon.shiny {
+            color: rgba(0, 0, 0, 0.4);
+            text-shadow: 0 0 10px #f0e68c; }
+        #mainDisplay .emojis-display .emojis-grid .emoji[data-title]::before, #mainDisplay .emojis-display .emojis-grid .emoji[data-rare-status]::after {
+          content: attr(data-title);
           display: none;
           position: absolute;
           top: 0;
@@ -114,11 +120,11 @@ h2 {
           padding: 2px;
           background-color: var(--black-color);
           font-size: 10px;
-          font-family: 'Bebas Neue', sans-serif;
+          font-family: "Bebas Neue", sans-serif;
           letter-spacing: 0.06em;
           text-align: center;
           color: var(--white-color); }
-        #mainDisplay .emojis-display .emojis-grid .emoji[data-description]:hover::before {
+        #mainDisplay .emojis-display .emojis-grid .emoji[data-title]:hover::before {
           display: block; }
         #mainDisplay .emojis-display .emojis-grid .emoji[data-rare-status]::after {
           content: attr(data-rare-status);
@@ -130,7 +136,25 @@ h2 {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     margin: 16px 0;
-    padding: 0 16px; }
+    padding: 0 16px;
+    overflow-y: auto; }
+    #mainDisplay .achievements-display .achievements-list {
+      margin-top: 8px; }
+      #mainDisplay .achievements-display .achievements-list .achievement {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px; }
+        #mainDisplay .achievements-display .achievements-list .achievement .icon {
+          padding: 8px;
+          width: fit-content;
+          font-size: 24px;
+          background: var(--white-color);
+          border: solid 2px var(--secondary-color);
+          border-radius: 4px;
+          margin-right: 16px; }
+        #mainDisplay .achievements-display .achievements-list .achievement .description {
+          font-size: 10px;
+          line-height: 1.5; }
   #mainDisplay .btns-section {
     display: flex;
     justify-content: space-between;

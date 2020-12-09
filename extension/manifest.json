@@ -1,8 +1,8 @@
 {
-  "name": "Emoji Catcher",
+  "name": "Emoji Collector",
   "version": "1.0",
-  "version_name": "1.0 Emoji Catcher alpha",
-  "description": "Catch all of the Emojis",
+  "version_name": "1.0 Emoji Collector alpha",
+  "description": "Collect all of the Emojis",
   "manifest_version": 2,
   "icons": {
     "16": "assets/logos/LOGO-16.png",
@@ -22,7 +22,7 @@
   ],
   "browser_action": {
     "default_popup": "popup.html",
-    "default_title": "Emoji Catcher"
+    "default_title": "Emoji Collector"
   },
-  "permissions": ["activeTab", "storage"]
+  "permissions": ["tabs", "storage"]
 }

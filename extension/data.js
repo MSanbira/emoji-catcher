@@ -1,7 +1,8 @@
-const EmojiCatcherSavedDataTemplate = {
+const EmojiCollectorSavedDataTemplate = {
   emojis: [],
   points: 0,
   achievements: [],
+  shiny: [],
   stats: {
     avgTimeToClick: 0,
     lastSecClick: 0,
@@ -10,7 +11,7 @@ const EmojiCatcherSavedDataTemplate = {
   },
 };
 
-const EmojiCatcherData = {
+const EmojiCollectorData = {
   bugEmoji: {
     emoji: "🐛",
     chance: 0,
@@ -18,14 +19,9 @@ const EmojiCatcherData = {
     points: 1,
     rareStatus: 3,
   },
+  firstEmoji: "🍪",
+  rareStatuses: ['normal', 'rare', 'spacial', 'uniq'],
   emojis: [
-    {
-      emoji: "🐛",
-      chance: 0,
-      title: "app bug",
-      points: 1,
-      rareStatus: 3,
-    },
     // rare status 0 - 10/20
     {
       emoji: "✌️",
@@ -226,7 +222,7 @@ const EmojiCatcherData = {
         check: "points",
         for: 100,
       },
-      text: "On the board: winning 100 points",
+      text: "On the board - winning 100 points",
       icon: "🥉",
     },
     {
@@ -235,7 +231,7 @@ const EmojiCatcherData = {
         type: "🍪",
         for: 10,
       },
-      text: "Master-baker: collecting 10 cookies",
+      text: "Master-baker - collecting 10 cookies",
       icon: "🍪",
     },
     {
@@ -243,7 +239,7 @@ const EmojiCatcherData = {
         check: "types",
         for: 10,
       },
-      text: "Slowly but surely: collecting 10 different types",
+      text: "Slowly but surely - collecting 10 different types",
       icon: "☝️",
     },
   ],
