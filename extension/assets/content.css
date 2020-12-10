@@ -1,4 +1,4 @@
-#EmojiCollectorGameElement {
+#EmojiCatcherGameElement {
   position: fixed;
   top: 100px;
   left: 100px;
@@ -6,38 +6,38 @@
   opacity: 0;
   animation: emojiCatcherShowAndHide 10s linear 1;
 }
-#EmojiCollectorGameElement[data-is-first-emoji] {
+#EmojiCatcherGameElement[data-is-first-emoji] {
   animation: emojiCatcherShow 1s linear 1;
   opacity: 1;
 }
-#EmojiCollectorGameElement .EC-emoji-btn {
+#EmojiCatcherGameElement .EC-emoji-btn {
   font-size: 40px;
   cursor: pointer;
   animation: emojiCatcherRotate 10s linear infinite;
 }
-#EmojiCollectorGameElement .EC-emoji-btn.shiny {
+#EmojiCatcherGameElement .EC-emoji-btn.shiny {
   color: rgba(0, 0, 0, 0.4);
   text-shadow: 0 0 10px #f0e68c;
 }
-#EmojiCollectorGameElement .EC-emoji-points {
+#EmojiCatcherGameElement .EC-emoji-points {
   font-family: "Press Start 2P";
   display: none;
   font-size: 40px;
   color: #fafafa;
   -webkit-text-stroke: 2px #9e9e9e;
 }
-#EmojiCollectorGameElement.clicked.clicked.clicked {
+#EmojiCatcherGameElement.clicked.clicked.clicked {
   animation: emojiCatcherFloat 1s linear 1;
 }
-#EmojiCollectorGameElement.clicked .EC-emoji-btn,
-#EmojiCollectorGameElement.clicked .EC-click-me {
+#EmojiCatcherGameElement.clicked .EC-emoji-btn,
+#EmojiCatcherGameElement.clicked .EC-click-me {
   display: none;
 }
-#EmojiCollectorGameElement.clicked .EC-emoji-points {
+#EmojiCatcherGameElement.clicked .EC-emoji-points {
   display: block;
 }
 
-#EmojiCollectorGameElement .EC-click-me {
+#EmojiCatcherGameElement .EC-click-me {
   font-family: "Press Start 2P";
   font-size: 24px;
   user-select: none;

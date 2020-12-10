@@ -1,6 +1,6 @@
-const EmojiCollector = {};
+const EmojiCatcher = {};
 
-EmojiCollector.bugEmoji = {
+EmojiCatcher.bugEmoji = {
   emoji: "🐛",
   chance: 0,
   title: "You found a bug, consider reporting :]",
@@ -9,22 +9,22 @@ EmojiCollector.bugEmoji = {
 };
 
 // Adding font
-EmojiCollector.font = new FontFace(
+EmojiCatcher.font = new FontFace(
   "Press Start 2P",
   "url('https://fonts.gstatic.com/s/pressstart2p/v9/e3t4euO8T-267oIAQAu6jDQyK3nVivNm4I81.woff2')"
 );
-document.fonts.add(EmojiCollector.font);
+document.fonts.add(EmojiCatcher.font);
 
-EmojiCollector.init = () => {
+EmojiCatcher.init = () => {
   // Click listener
   document.addEventListener("click", (e) => {
     const clickedContainer = e.target.parentElement;
     if (
       clickedContainer &&
-      clickedContainer.getAttribute("id") === "EmojiCollectorGameElement"
+      clickedContainer.getAttribute("id") === "EmojiCatcherGameElement"
     ) {
       e.stopPropagation;
-      EmojiCollector.handleEmojiClick(
+      EmojiCatcher.handleEmojiClick(
         clickedContainer.getAttribute("data-emoji")
       );
     }
@@ -33,96 +33,96 @@ EmojiCollector.init = () => {
   // Msg listener
   chrome.runtime.onMessage.addListener((req, _sender) => {
     console.log("msg: ", req);
-    EmojiCollector.handleMessage(req);
+    EmojiCatcher.handleMessage(req);
   });
 };
 
-EmojiCollector.handleMessage = (req) => {
+EmojiCatcher.handleMessage = (req) => {
   if (req.action === "create") {
-    EmojiCollector.createEmoji(req.emoji, req.isShiny);
+    EmojiCatcher.createEmoji(req.emoji, req.isShiny);
   } else if (req.action === "createFirstEmoji") {
-    EmojiCollector.createFirstEmoji(req.emoji);
+    EmojiCatcher.createFirstEmoji(req.emoji);
   }
 };
 
-EmojiCollector.createEmoji = (emojiObj = EmojiCollector.bugEmoji, isShiny) => {
-  EmojiCollector.emojiElement = document.getElementById(
-    "EmojiCollectorGameElement"
+EmojiCatcher.createEmoji = (emojiObj = EmojiCatcher.bugEmoji, isShiny) => {
+  EmojiCatcher.emojiElement = document.getElementById(
+    "EmojiCatcherGameElement"
   );
-  if (!EmojiCollector.emojiElement) {
-    EmojiCollector.emojiElement = document.createElement("div");
-    EmojiCollector.emojiElement.setAttribute("id", "EmojiCollectorGameElement");
-    EmojiCollector.emojiElement.setAttribute("data-emoji", emojiObj.emoji);
+  if (!EmojiCatcher.emojiElement) {
+    EmojiCatcher.emojiElement = document.createElement("div");
+    EmojiCatcher.emojiElement.setAttribute("id", "EmojiCatcherGameElement");
+    EmojiCatcher.emojiElement.setAttribute("data-emoji", emojiObj.emoji);
     if(isShiny) {
-      EmojiCollector.emojiElement.setAttribute("data-is-shiny", isShiny);
+      EmojiCatcher.emojiElement.setAttribute("data-is-shiny", isShiny);
     }
     const divTop = parseInt((window.innerHeight - 150) * Math.random() + 50);
     const divLeft = parseInt((window.innerWidth - 150) * Math.random() + 50);
-    EmojiCollector.emojiElement.setAttribute(
+    EmojiCatcher.emojiElement.setAttribute(
       "style",
       `top: ${divTop}px; left: ${divLeft}px;`
     );
-    document.body.appendChild(EmojiCollector.emojiElement);
+    document.body.appendChild(EmojiCatcher.emojiElement);
 
-    EmojiCollector.emojiElement.innerHTML = `
+    EmojiCatcher.emojiElement.innerHTML = `
         <div class="EC-emoji-btn ${isShiny ? "shiny" : ""}">${
       emojiObj.emoji
     }</div>
         <div class="EC-emoji-points">+${emojiObj.points}</div>
     `;
 
-    EmojiCollector.DateTimeWhenCreated = new Date().getTime();
-    EmojiCollector.initialTimeout = setTimeout(() => {
-      EmojiCollector.emojiElement && EmojiCollector.emojiElement.remove();
+    EmojiCatcher.DateTimeWhenCreated = new Date().getTime();
+    EmojiCatcher.initialTimeout = setTimeout(() => {
+      EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove();
     }, 10000);
   }
 };
 
-EmojiCollector.handleEmojiClick = (emoji) => {
-  EmojiCollector.msUntilClick =
-    new Date().getTime() - EmojiCollector.DateTimeWhenCreated;
-  EmojiCollector.emojiElement.classList.add("clicked");
-  EmojiCollector.isFirstEmoji = !!EmojiCollector.emojiElement.getAttribute(
+EmojiCatcher.handleEmojiClick = (emoji) => {
+  EmojiCatcher.msUntilClick =
+    new Date().getTime() - EmojiCatcher.DateTimeWhenCreated;
+  EmojiCatcher.emojiElement.classList.add("clicked");
+  EmojiCatcher.isFirstEmoji = !!EmojiCatcher.emojiElement.getAttribute(
     "data-is-first-emoji"
   );
-  EmojiCollector.isShiny = !!EmojiCollector.emojiElement.getAttribute(
+  EmojiCatcher.isShiny = !!EmojiCatcher.emojiElement.getAttribute(
     "data-is-shiny"
   );
-  clearTimeout(EmojiCollector.initialTimeout);
+  clearTimeout(EmojiCatcher.initialTimeout);
   setTimeout(
-    () => EmojiCollector.emojiElement && EmojiCollector.emojiElement.remove(),
+    () => EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove(),
     1000
   );
 
-  console.log(emoji, EmojiCollector.msUntilClick);
+  console.log(emoji, EmojiCatcher.msUntilClick);
   chrome.runtime.sendMessage({
     action: "click",
     emoji: emoji,
-    isFirstEmoji: EmojiCollector.isFirstEmoji,
-    msUntilClick: EmojiCollector.msUntilClick,
-    isShiny: EmojiCollector.isShiny
+    isFirstEmoji: EmojiCatcher.isFirstEmoji,
+    msUntilClick: EmojiCatcher.msUntilClick,
+    isShiny: EmojiCatcher.isShiny
   });
 };
 
-EmojiCollector.createFirstEmoji = (emojiObj = EmojiCollector.bugEmoji) => {
-  EmojiCollector.emojiElement = document.getElementById(
-    "EmojiCollectorGameElement"
+EmojiCatcher.createFirstEmoji = (emojiObj = EmojiCatcher.bugEmoji) => {
+  EmojiCatcher.emojiElement = document.getElementById(
+    "EmojiCatcherGameElement"
   );
-  if (!EmojiCollector.emojiElement) {
-    EmojiCollector.emojiElement = document.createElement("div");
-    EmojiCollector.emojiElement.setAttribute("id", "EmojiCollectorGameElement");
-    EmojiCollector.emojiElement.setAttribute("data-emoji", emojiObj.emoji);
-    EmojiCollector.emojiElement.setAttribute("data-is-first-emoji", true);
-    document.body.appendChild(EmojiCollector.emojiElement);
+  if (!EmojiCatcher.emojiElement) {
+    EmojiCatcher.emojiElement = document.createElement("div");
+    EmojiCatcher.emojiElement.setAttribute("id", "EmojiCatcherGameElement");
+    EmojiCatcher.emojiElement.setAttribute("data-emoji", emojiObj.emoji);
+    EmojiCatcher.emojiElement.setAttribute("data-is-first-emoji", true);
+    document.body.appendChild(EmojiCatcher.emojiElement);
 
-    EmojiCollector.emojiElement.innerHTML = `
+    EmojiCatcher.emojiElement.innerHTML = `
         <div class="EC-emoji-btn">${emojiObj.emoji}</div>
         <div class="EC-emoji-points">+${emojiObj.points}</div>
         <div class="EC-click-me">< click me</div>
     `;
 
-    EmojiCollector.DateTimeWhenCreated = new Date().getTime();
+    EmojiCatcher.DateTimeWhenCreated = new Date().getTime();
   }
 };
 
-EmojiCollector.init();
+EmojiCatcher.init();

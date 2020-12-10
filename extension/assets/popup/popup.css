@@ -50,10 +50,14 @@ h2 {
   border: solid 2px var(--white-color);
   color: var(--white-color);
   font-size: 24px;
-  font-family: "Bebas Neue", sans-serif; }
+  font-family: "Bebas Neue", sans-serif;
+  cursor: pointer; }
   .btn img:first-child {
     margin-right: 8px;
     height: 20px; }
+  .btn.disable {
+    cursor: default;
+    background: var(--secondary-color); }
 
 #mainDisplay {
   display: grid;

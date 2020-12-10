@@ -58,9 +58,14 @@ h2 {
   color: var(--white-color);
   font-size: 24px;
   font-family: "Bebas Neue", sans-serif;
+  cursor: pointer;
   img:first-child {
     margin-right: 8px;
     height: 20px;
+  }
+  &.disable {
+      cursor: default;
+      background: var(--secondary-color);
   }
 }
 

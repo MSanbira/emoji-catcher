@@ -1,2 +1,2 @@
-# emoji-collector
-A Chrome extension game
+# Emoji-Catcher
+A Chrome extension game 🏆

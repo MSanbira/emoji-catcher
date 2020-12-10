@@ -1,4 +1,4 @@
-const EmojiCollectorSavedDataTemplate = {
+const EmojiCatcherSavedDataTemplate = {
   emojis: [],
   points: 0,
   achievements: [],
@@ -8,10 +8,11 @@ const EmojiCollectorSavedDataTemplate = {
     lastSecClick: 0,
     firstSecClick: 0,
     emojiMissed: 0,
+    missedEmojis: 0,
   },
 };
 
-const EmojiCollectorData = {
+const EmojiCatcherData = {
   bugEmoji: {
     emoji: "🐛",
     chance: 0,
