@@ -14,6 +14,9 @@
   --dark-grey-color-50: #d9d9d980;
   --text-grey-color: #868589; }
 
+.hide {
+  display: none !important; }
+
 body {
   background-color: var(--light-grey-color);
   border: solid 1px var(--dark-grey-color);
@@ -29,6 +32,31 @@ h2 {
 .babes-font {
   font-family: "Bebas Neue", sans-serif; }
 
+.tooltip {
+  display: none;
+  position: absolute;
+  background: var(--black-color);
+  border-radius: 4px;
+  color: var(--white-color);
+  padding: 8px;
+  font-size: 14px;
+  max-width: 350px;
+  top: -100%;
+  box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.15); }
+  .tooltip::after {
+    content: '';
+    display: block;
+    position: absolute;
+    height: 8px;
+    width: 16px;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    background: var(--black-color);
+    left: calc(50% - 8px);
+    bottom: -8px; }
+
+div:hover > .tooltip {
+  display: block; }
+
 .icon-btn {
   border: solid 2px var(--primary-color);
   border-radius: 4px;
@@ -38,6 +66,8 @@ h2 {
   .icon-btn img {
     height: 20px;
     width: auto; }
+  .icon-btn.spin img {
+    animation: spinImg 500ms linear 1; }
 
 .btn {
   display: flex;
@@ -51,8 +81,9 @@ h2 {
   color: var(--white-color);
   font-size: 24px;
   font-family: "Bebas Neue", sans-serif;
+  position: relative;
   cursor: pointer; }
-  .btn img:first-child {
+  .btn img {
     margin-right: 8px;
     height: 20px; }
   .btn.disable {
@@ -179,5 +210,11 @@ h2 {
           margin-right: 4px; }
     #mainDisplay .btns-section .made-by {
       color: var(--text-grey-color); }
+
+@keyframes spinImg {
+  0% {
+    transform: rotate(0deg); }
+  100% {
+    transform: rotate(360deg); } }
 
 /*# sourceMappingURL=popup.css.map */

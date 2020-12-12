@@ -2,6 +2,7 @@ const emojiGrid = document.querySelector(".emojis-grid");
 const achievementsList = document.querySelector(".achievements-list");
 const pointsDom = document.querySelector(".points");
 const pauseBtn = document.querySelector(".pause-btn");
+const refreshBtn = document.querySelector(".refresh-btn");
 
 const EmojiCatcher = {};
 
@@ -10,15 +11,7 @@ EmojiCatcher.sortedEmojis = EmojiCatcherData.emojis.sort(
 );
 
 function init() {
-  EmojiCatcher.getIsPaused((isPaused) => {
-    EmojiCatcher.isPaused = !!isPaused;
-    EmojiCatcher.setPauseBtn();
-  });
-  EmojiCatcher.getSavedData(() => {
-    EmojiCatcher.setPoints();
-    EmojiCatcher.setEmojiGrid();
-    EmojiCatcher.setAchievements();
-  });
+  EmojiCatcher.refreshFromStorage();
 
   pauseBtn.addEventListener('click', () => {
       EmojiCatcher.isPaused = !EmojiCatcher.isPaused;
@@ -29,19 +22,38 @@ function init() {
       });
       EmojiCatcher.setPauseBtn();
   });
+
+  refreshBtn.addEventListener('click', () => {
+    refreshBtn.classList.add('spin');
+    setTimeout(() => refreshBtn.classList.remove('spin'), 500);
+    EmojiCatcher.refreshFromStorage();
+  });
+}
+
+EmojiCatcher.refreshFromStorage = () => {
+  EmojiCatcher.getIsPaused((isPaused) => {
+    EmojiCatcher.isPaused = !!isPaused;
+    EmojiCatcher.setPauseBtn();
+  });
+  EmojiCatcher.getSavedData(() => {
+    EmojiCatcher.setPoints();
+    EmojiCatcher.setEmojiGrid();
+    EmojiCatcher.setAchievements();
+  });
 }
 
 EmojiCatcher.setPauseBtn = () => {
+  const playImg = pauseBtn.querySelector('img[alt="play"]');
+  const pauseImg = pauseBtn.querySelector('img[alt="pause"]');
+  const btnInnerText = pauseBtn.querySelector('.btn-inner-text');
   if (EmojiCatcher.isPaused) {
-    pauseBtn.innerHTML = `
-        <img src="/assets/images/play.svg" alt="pause" />
-        play game
-    `;
+    playImg.classList.remove('hide');
+    pauseImg.classList.add('hide');
+    btnInnerText.innerText = 'play game'
   } else {
-    pauseBtn.innerHTML = `
-        <img src="/assets/images/pause.svg" alt="pause" />
-        pause game
-    `;
+    playImg.classList.add('hide');
+    pauseImg.classList.remove('hide');
+    btnInnerText.innerText = 'pause game'
   }
 };
 
@@ -50,6 +62,7 @@ EmojiCatcher.setPoints = () => {
 };
 
 EmojiCatcher.setEmojiGrid = () => {
+  emojiGrid.innerHTML = '';
   EmojiCatcher.sortedEmojis.forEach((emojiObj) => {
     const emojiCount = EmojiCatcher.formattedNumber(emojiObj.emoji);
     if (!!emojiCount) {
@@ -77,6 +90,7 @@ EmojiCatcher.setEmojiGrid = () => {
 };
 
 EmojiCatcher.setAchievements = () => {
+  achievementsList.innerHTML = '';
   EmojiCatcher.savedData.achievements.forEach((achievement) => {
     const achievementObj = EmojiCatcherData.achievements.find(
       (a) => a.icon === achievement

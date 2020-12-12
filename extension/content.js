@@ -53,8 +53,10 @@ EmojiCatcher.createEmoji = (emojiObj = EmojiCatcher.bugEmoji, isShiny) => {
     EmojiCatcher.emojiElement = document.createElement("div");
     EmojiCatcher.emojiElement.setAttribute("id", "EmojiCatcherGameElement");
     EmojiCatcher.emojiElement.setAttribute("data-emoji", emojiObj.emoji);
+    let emojiPoints = emojiObj.points;
     if(isShiny) {
       EmojiCatcher.emojiElement.setAttribute("data-is-shiny", isShiny);
+      emojiPoints *= 100;
     }
     const divTop = parseInt((window.innerHeight - 150) * Math.random() + 50);
     const divLeft = parseInt((window.innerWidth - 150) * Math.random() + 50);
@@ -68,7 +70,7 @@ EmojiCatcher.createEmoji = (emojiObj = EmojiCatcher.bugEmoji, isShiny) => {
         <div class="EC-emoji-btn ${isShiny ? "shiny" : ""}">${
       emojiObj.emoji
     }</div>
-        <div class="EC-emoji-points">+${emojiObj.points}</div>
+        <div class="EC-emoji-points">+${emojiPoints}</div>
     `;
 
     EmojiCatcher.DateTimeWhenCreated = new Date().getTime();

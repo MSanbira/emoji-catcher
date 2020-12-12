@@ -25,6 +25,7 @@
   font-size: 40px;
   color: #fafafa;
   -webkit-text-stroke: 2px #9e9e9e;
+  white-space: nowrap;
 }
 #EmojiCatcherGameElement.clicked.clicked.clicked {
   animation: emojiCatcherFloat 1s linear 1;

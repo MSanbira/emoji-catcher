@@ -108,7 +108,7 @@ EmojiCatcher.getAndSaveEmojiClick = (
   EmojiCatcher.getSavedData(() => {
     const emojiObj = EmojiCatcher.getEmojiObjByEmoji(emoji);
     EmojiCatcher.savedData.emojis.push(emoji);
-    (EmojiCatcher.savedData.points += emojiObj.points), 0;
+    EmojiCatcher.savedData.points += emojiObj.points * (isShiny ? 100 : 1) ;
     EmojiCatcher.savedData.achievements = [
       ...EmojiCatcher.savedData.achievements,
       ...EmojiCatcher.getNewAchievements(),
