@@ -16,8 +16,7 @@
   animation: emojiCatcherRotate 10s linear infinite;
 }
 #EmojiCatcherGameElement .EC-emoji-btn.shiny {
-  color: rgba(0, 0, 0, 0.4);
-  text-shadow: 0 0 10px #f0e68c;
+  text-shadow: 4px 4px #C8BDFF;
 }
 #EmojiCatcherGameElement .EC-emoji-points {
   font-family: "Press Start 2P";

@@ -50,7 +50,7 @@ h2 {
   top: -100%;
   box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.15);
   &::after {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     height: 8px;
@@ -100,27 +100,59 @@ div:hover > .tooltip {
     height: 20px;
   }
   &.disable {
-      cursor: default;
-      background: var(--secondary-color);
+    cursor: default;
+    background: var(--secondary-color);
   }
 }
 
-#mainDisplay {
+section {
   display: grid;
   grid-template-columns: 460px auto;
   grid-template-rows: 68px auto 68px;
   height: 600px;
   width: 100%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  position: relative;
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  background-color: var(--medium-grey-color);
+  border-bottom: solid 1px var(--dark-grey-color);
+  font-size: 20px;
+  padding: 16px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  grid-column: 1 / 3;
+  grid-row: 3 / 4;
+  background-color: var(--medium-grey-color);
+  border-top: solid 1px var(--dark-grey-color);
+  padding: 0 16px 0 8px;
+}
+
+.made-by {
+  color: var(--text-grey-color);
+}
+
+.icon {
+  padding: 8px;
+  width: fit-content;
+  font-size: 24px;
+  background: var(--white-color);
+  border: solid 2px var(--secondary-color);
+  border-radius: 4px;
+  margin-right: 16px;
+}
+
+#mainDisplay {
   .points-section {
-    display: flex;
-    position: relative;
     justify-content: center;
-    align-items: center;
-    grid-column: 1 / 3;
-    grid-row: 1 / 2;
-    background-color: var(--medium-grey-color);
-    border-bottom: solid 1px var(--dark-grey-color);
-    font-size: 20px;
     .leader-board-place {
       color: var(--primary-color);
       padding-right: 16px;
@@ -158,12 +190,11 @@ div:hover > .tooltip {
         height: 100%;
         border: dashed 1px var(--primary-color);
         user-select: none;
-        .icon {
+        .emoji-icon {
           font-size: 24px;
           margin-bottom: 8px;
           &.shiny {
-            color: rgba(0, 0, 0, 0.4);
-            text-shadow: 0 0 10px #f0e68c;
+            text-shadow: 3px 3px #C8BDFF;
           }
         }
         &[data-title]::before,
@@ -208,15 +239,6 @@ div:hover > .tooltip {
         display: flex;
         align-items: center;
         margin-bottom: 12px;
-        .icon {
-          padding: 8px;
-          width: fit-content;
-          font-size: 24px;
-          background: var(--white-color);
-          border: solid 2px var(--secondary-color);
-          border-radius: 4px;
-          margin-right: 16px;
-        }
         .description {
           font-size: 10px;
           line-height: 1.5;
@@ -226,14 +248,6 @@ div:hover > .tooltip {
   }
 
   .btns-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    grid-column: 1 / 3;
-    grid-row: 3 / 4;
-    background-color: var(--medium-grey-color);
-    border-top: solid 1px var(--dark-grey-color);
-    padding: 0 16px 0 8px;
     .btns-container {
       display: flex;
       .btn {
@@ -247,8 +261,39 @@ div:hover > .tooltip {
         }
       }
     }
-    .made-by {
-      color: var(--text-grey-color);
+  }
+}
+
+#statsPage {
+  .stats-header {
+    justify-content: flex-start;
+    .icon-btn {
+      margin-right: 24px;
+    }
+  }
+
+  .stats-container {
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    padding: 16px;
+    overflow-y: auto;
+    .stat {
+      display: flex;
+      align-items: center;
+      &:not(:last-child) {
+        margin-bottom: 16px;
+      }
+      .icon {
+        margin-right: 16px;
+      }
+      .description {
+        width: 240px;
+        color: var(--text-grey-color);
+        font-size: 10px;
+      }
+      .stats-data {
+        font-size: 10px;
+      }
     }
   }
 }

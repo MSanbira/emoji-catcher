@@ -1,5 +1,5 @@
 const EmojiCatcher = {};
-EmojiCatcher.isTestMode = false;
+EmojiCatcher.isTestMode = true;
 EmojiCatcher.isResetSavedData = false;
 EmojiCatcher.msIntervalToNextEmoji =
   1000 * 60 * (EmojiCatcher.isTestMode ? 0.3 : 5);
@@ -108,7 +108,7 @@ EmojiCatcher.getAndSaveEmojiClick = (
   EmojiCatcher.getSavedData(() => {
     const emojiObj = EmojiCatcher.getEmojiObjByEmoji(emoji);
     EmojiCatcher.savedData.emojis.push(emoji);
-    EmojiCatcher.savedData.points += emojiObj.points * (isShiny ? 100 : 1) ;
+    EmojiCatcher.savedData.points += emojiObj.points * (isShiny ? 100 : 1);
     EmojiCatcher.savedData.achievements = [
       ...EmojiCatcher.savedData.achievements,
       ...EmojiCatcher.getNewAchievements(),
@@ -144,15 +144,22 @@ EmojiCatcher.checkAchievement = (achievement) => {
     case "points":
       return achievement.condition.for <= EmojiCatcher.savedData.points;
     case "emojis":
-      const emojiCount = EmojiCatcher.savedData.emojis.filter(
-        (emoji) => emoji === achievement.condition.type
-      ).length;
-      return achievement.condition.for <= emojiCount;
+      for (const type of achievement.condition.types) {
+        const emojiCount = EmojiCatcher.savedData.emojis.filter(
+          (emoji) => emoji === type
+        ).length;
+        if (achievement.condition.for > emojiCount) {
+          return false;
+        }
+      }
+      return true;
     case "types":
       const uniqueEmojis = EmojiCatcher.savedData.emojis.filter(
         (v, i, a) => a.indexOf(v) === i
-      );
+      ).length;
       return achievement.condition.for <= uniqueEmojis;
+    case "amount":
+      return achievement.condition.for <= EmojiCatcher.savedData.emojis;
     default:
       return false;
   }
@@ -161,14 +168,14 @@ EmojiCatcher.checkAchievement = (achievement) => {
 EmojiCatcher.updatedStats = (msUntilClick, savedData, isFirstEmoji) => {
   const updated = {};
   const emojiNum = savedData.emojis.length - 1;
-  updated.missedEmojis = savedData.stats.missedEmojis + EmojiCatcher.missedEmojis;
+  updated.missedEmojis =
+    savedData.stats.missedEmojis + EmojiCatcher.missedEmojis;
   EmojiCatcher.missedEmojis = 0;
   if (!isFirstEmoji) {
-    updated.avgPointsPerClick = savedData.points / emojiNum;
     updated.firstSecClick =
-      savedData.stats.firstSecClick + msUntilClick < 1000 ? 1 : 0;
+      savedData.stats.firstSecClick + (msUntilClick < 1000 ? 1 : 0);
     updated.lastSecClick =
-      savedData.stats.lastSecClick + msUntilClick > 9000 ? 1 : 0;
+      savedData.stats.lastSecClick + (msUntilClick > 9000 ? 1 : 0);
     updated.avgTimeToClick =
       (savedData.stats.avgTimeToClick + msUntilClick) / emojiNum;
   }
@@ -299,7 +306,7 @@ EmojiCatcher.uniqKeysTest = () => {
     ...new Set(EmojiCatcherData.achievements.map((a) => a.icon)),
   ];
   console.log(
-    "uniq keys emojis: ",
+    "uniq keys achievements: ",
     EmojiCatcherData.achievements.length === achievementKeys.length
   );
 };

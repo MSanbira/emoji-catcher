@@ -1,8 +1,13 @@
+const pages = document.querySelectorAll("section");
 const emojiGrid = document.querySelector(".emojis-grid");
 const achievementsList = document.querySelector(".achievements-list");
 const pointsDom = document.querySelector(".points");
+const statsDoms = document.querySelectorAll(".stat");
+
 const pauseBtn = document.querySelector(".pause-btn");
 const refreshBtn = document.querySelector(".refresh-btn");
+const statsBtn = document.querySelector(".stats-btn");
+const backBtn = document.querySelector(".back-btn");
 
 const EmojiCatcher = {};
 
@@ -13,20 +18,28 @@ EmojiCatcher.sortedEmojis = EmojiCatcherData.emojis.sort(
 function init() {
   EmojiCatcher.refreshFromStorage();
 
-  pauseBtn.addEventListener('click', () => {
-      EmojiCatcher.isPaused = !EmojiCatcher.isPaused;
-      EmojiCatcher.setIsPaused();
-      chrome.runtime.sendMessage({
-        action: "isPausedChange",
-        isPaused: EmojiCatcher.isPaused
-      });
-      EmojiCatcher.setPauseBtn();
+  pauseBtn.addEventListener("click", () => {
+    EmojiCatcher.isPaused = !EmojiCatcher.isPaused;
+    EmojiCatcher.setIsPaused();
+    chrome.runtime.sendMessage({
+      action: "isPausedChange",
+      isPaused: EmojiCatcher.isPaused,
+    });
+    EmojiCatcher.setPauseBtn();
   });
 
-  refreshBtn.addEventListener('click', () => {
-    refreshBtn.classList.add('spin');
-    setTimeout(() => refreshBtn.classList.remove('spin'), 500);
+  refreshBtn.addEventListener("click", () => {
+    refreshBtn.classList.add("spin");
+    setTimeout(() => refreshBtn.classList.remove("spin"), 500);
     EmojiCatcher.refreshFromStorage();
+  });
+
+  statsBtn.addEventListener("click", () => {
+    EmojiCatcher.changePage("statsPage");
+  });
+
+  backBtn.addEventListener("click", () => {
+    EmojiCatcher.changePage("mainDisplay");
   });
 }
 
@@ -39,21 +52,32 @@ EmojiCatcher.refreshFromStorage = () => {
     EmojiCatcher.setPoints();
     EmojiCatcher.setEmojiGrid();
     EmojiCatcher.setAchievements();
+    EmojiCatcher.setStats();
   });
-}
+};
+
+EmojiCatcher.changePage = (pageName) => {
+  for (const page of pages) {
+    if (page.getAttribute("id") === pageName) {
+      page.classList.remove("hide");
+    } else {
+      page.classList.add("hide");
+    }
+  }
+};
 
 EmojiCatcher.setPauseBtn = () => {
   const playImg = pauseBtn.querySelector('img[alt="play"]');
   const pauseImg = pauseBtn.querySelector('img[alt="pause"]');
-  const btnInnerText = pauseBtn.querySelector('.btn-inner-text');
+  const btnInnerText = pauseBtn.querySelector(".btn-inner-text");
   if (EmojiCatcher.isPaused) {
-    playImg.classList.remove('hide');
-    pauseImg.classList.add('hide');
-    btnInnerText.innerText = 'play game'
+    playImg.classList.remove("hide");
+    pauseImg.classList.add("hide");
+    btnInnerText.innerText = "play game";
   } else {
-    playImg.classList.add('hide');
-    pauseImg.classList.remove('hide');
-    btnInnerText.innerText = 'pause game'
+    playImg.classList.add("hide");
+    pauseImg.classList.remove("hide");
+    btnInnerText.innerText = "pause game";
   }
 };
 
@@ -62,7 +86,7 @@ EmojiCatcher.setPoints = () => {
 };
 
 EmojiCatcher.setEmojiGrid = () => {
-  emojiGrid.innerHTML = '';
+  emojiGrid.innerHTML = "";
   EmojiCatcher.sortedEmojis.forEach((emojiObj) => {
     const emojiCount = EmojiCatcher.formattedNumber(emojiObj.emoji);
     if (!!emojiCount) {
@@ -75,7 +99,7 @@ EmojiCatcher.setEmojiGrid = () => {
                 ${!!emojiObj.rareStatus && dataRareStr}
                 data-title="${emojiObj.title}"
             >
-                <div class='icon ${
+                <div class='emoji-icon ${
                   EmojiCatcher.isShiny(emojiObj.emoji) ? "shiny" : ""
                 }'>
                     ${emojiObj.emoji}
@@ -90,7 +114,7 @@ EmojiCatcher.setEmojiGrid = () => {
 };
 
 EmojiCatcher.setAchievements = () => {
-  achievementsList.innerHTML = '';
+  achievementsList.innerHTML = "";
   EmojiCatcher.savedData.achievements.forEach((achievement) => {
     const achievementObj = EmojiCatcherData.achievements.find(
       (a) => a.icon === achievement
@@ -104,6 +128,22 @@ EmojiCatcher.setAchievements = () => {
             </div>
         `;
   });
+};
+
+EmojiCatcher.setStats = () => {
+  const avgPoints =
+    EmojiCatcher.savedData.points / EmojiCatcher.savedData.emojis.length;
+  const statsAgg = {
+    ...EmojiCatcher.savedData.stats,
+    avgTimeToClick: `${parseInt(EmojiCatcher.savedData.stats.avgTimeToClick * 100) / 100.0}s`,
+    emojisCaught: EmojiCatcher.savedData.emojis.length,
+    shinyCaught: EmojiCatcher.savedData.shiny.length,
+    pointsPerClick: `${parseInt(avgPoints * 100) / 100.0} points`,
+    achievements: `${EmojiCatcher.savedData.achievements.length}/${EmojiCatcherData.achievements.length}`,
+  };
+  for (const statDom of statsDoms) {
+    statDom.querySelector('.stats-data').innerText = statsAgg[statDom.getAttribute('data-stat-type')];
+  }
 };
 
 EmojiCatcher.formattedNumber = (emoji) => {
