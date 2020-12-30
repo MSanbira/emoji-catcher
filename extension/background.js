@@ -1,5 +1,6 @@
 const EmojiCatcher = {};
-EmojiCatcher.isTestMode = true;
+EmojiCatcher.isTestMode = false;
+EmojiCatcher.simulation = EmojiCatcher.isTestMode ? [] : [];
 EmojiCatcher.isResetSavedData = false;
 EmojiCatcher.msIntervalToNextEmoji =
   1000 * 60 * (EmojiCatcher.isTestMode ? 0.3 : 5);
@@ -177,7 +178,7 @@ EmojiCatcher.updatedStats = (msUntilClick, savedData, isFirstEmoji) => {
     updated.lastSecClick =
       savedData.stats.lastSecClick + (msUntilClick > 9000 ? 1 : 0);
     updated.avgTimeToClick =
-      (savedData.stats.avgTimeToClick + msUntilClick) / emojiNum;
+      (savedData.stats.avgTimeToClick + msUntilClick) / Math.min(emojiNum, 2);
   }
 
   return { ...savedData.stats, ...updated };
@@ -222,9 +223,11 @@ EmojiCatcher.checkAndShowNextEmoji = () => {
 };
 
 EmojiCatcher.setNewNextEmoji = () => {
+  const emoji =
+    EmojiCatcher.simulation.shift() || EmojiCatcher.getEmojiObjByChance().emoji;
   EmojiCatcher.nextEmoji = {
     dateTime: new Date().getTime() + EmojiCatcher.msIntervalToNextEmoji,
-    emoji: EmojiCatcher.getEmojiObjByChance().emoji,
+    emoji: emoji,
   };
   EmojiCatcher.setNextEmoji();
   setTimeout(

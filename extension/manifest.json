@@ -9,6 +9,11 @@
     "48": "assets/logos/LOGO-48.png",
     "128": "assets/logos/LOGO-128.png"
   },
+  "web_accessible_resources": [
+    "assets/images/*.png",
+    "assets/images/*.svg",
+    "assets/images/*.gif"
+  ],
   "background": {
     "scripts": ["data.js", "background.js"],
     "persistent": true

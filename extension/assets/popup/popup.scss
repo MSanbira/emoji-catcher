@@ -193,8 +193,41 @@ footer {
         .emoji-icon {
           font-size: 24px;
           margin-bottom: 8px;
+          position: relative;
           &.shiny {
-            text-shadow: 3px 3px #C8BDFF;
+            text-shadow: 3px 3px #c8bdff;
+          }
+          .shiny-stars {
+            position: absolute;
+            top: 0;
+            right: 0;
+            div {
+              background: #ffcc4d;
+              border: solid 1px #f9a52b;
+              transform: rotate(45deg);
+              position: absolute;
+              animation: linear shiny-animation 3s infinite;
+              &:nth-child(1) {
+                height: 4px;
+                width: 4px;
+                top: 6px;
+                right: 4px;
+              }
+              &:nth-child(2) {
+                height: 1px;
+                width: 1px;
+                top: 10px;
+                right: 0;
+                animation-delay: 200ms;
+              }
+              &:nth-child(3) {
+                height: 2px;
+                width: 2px;
+                top: 14px;
+                right: 2px;
+                animation-delay: 400ms;
+              }
+            }
           }
         }
         &[data-title]::before,
@@ -222,6 +255,13 @@ footer {
           top: unset;
           bottom: 0;
           background-color: var(--primary-color);
+        }
+        &[data-rare-status] .rare-img {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          z-index: 20;
+          height: 14px;
         }
       }
     }
@@ -307,5 +347,17 @@ footer {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes shiny-animation {
+  0% {
+    transform: rotate(45deg) scale(1, 1);
+  }
+  15% {
+    transform: rotate(45deg) scale(2, 2);
+  }
+  30%, 100% {
+    transform: rotate(45deg) scale(1, 1);
   }
 }

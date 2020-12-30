@@ -16,7 +16,7 @@
   animation: emojiCatcherRotate 10s linear infinite;
 }
 #EmojiCatcherGameElement .EC-emoji-btn.shiny {
-  text-shadow: 4px 4px #C8BDFF;
+  text-shadow: 4px 4px #c8bdff;
 }
 #EmojiCatcherGameElement .EC-emoji-points {
   font-family: "Press Start 2P";
@@ -30,7 +30,8 @@
   animation: emojiCatcherFloat 1s linear 1;
 }
 #EmojiCatcherGameElement.clicked .EC-emoji-btn,
-#EmojiCatcherGameElement.clicked .EC-click-me {
+#EmojiCatcherGameElement.clicked .EC-click-me,
+#EmojiCatcherGameElement.clicked .EC-shiny-stars {
   display: none;
 }
 #EmojiCatcherGameElement.clicked .EC-emoji-points {
@@ -46,6 +47,141 @@
   top: 16px;
   left: 64px;
 }
+
+#EmojiCatcherGameElement .EC-shiny-stars {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#EmojiCatcherGameElement .EC-shiny-stars div {
+  box-sizing: border-box;
+  background: #ffcc4d;
+  border: solid 1px #f9a52b;
+  transform: rotate(45deg);
+  position: absolute;
+  animation: linear emojiCatcherShiny 3s infinite;
+}
+#EmojiCatcherGameElement .EC-shiny-stars div:nth-child(1) {
+  height: 6px;
+  width: 6px;
+  top: 12px;
+  right: 5px;
+}
+#EmojiCatcherGameElement .EC-shiny-stars div:nth-child(2) {
+  height: 2px;
+  width: 2px;
+  top: 16px;
+  right: 0;
+  animation-delay: 200ms;
+}
+#EmojiCatcherGameElement .EC-shiny-stars div:nth-child(3) {
+  height: 3px;
+  width: 3px;
+  top: 20px;
+  right: 3px;
+  animation-delay: 400ms;
+}
+
+/* POPUP */
+
+#EmojiCatcherWelcomePopup {
+  width: 800px;
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  z-index: 50000;
+  margin: 0 auto;
+  top: calc(50vh - 310px);
+  border: 1px solid #D9D9D9;
+  background: #f1f1f1;
+  box-shadow: 4px 4px #868589;
+  border-radius: 6px;
+  color: #1C1A22;
+  animation: emojiCatcherFadeIn 1s 1 linear;
+}
+
+#EmojiCatcherWelcomePopup header {
+  padding: 24px;
+  background: #d7d7d7;
+  position: relative;
+  overflow-y: hidden;
+}
+
+#EmojiCatcherWelcomePopup header .EC-header-bg {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  opacity: 0.2;
+}
+
+#EmojiCatcherWelcomePopup header .EC-title {
+  text-align: center;
+  font-size: 20px;
+  font-family: "Press Start 2P";
+}
+
+#EmojiCatcherWelcomePopup header .EC-exit-btn {
+  box-sizing: border-box;
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: solid 2px #868589;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+#EmojiCatcherWelcomePopup header .EC-exit-btn img {
+  display: block;
+}
+
+#EmojiCatcherWelcomePopup section {
+  padding: 24px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+#EmojiCatcherWelcomePopup section .EC-sub-title {
+  text-align: center;
+  font-size: 24px;
+  font-family: "Bebas Neue", sans-serif;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+}
+
+#EmojiCatcherWelcomePopup section .EC-blue-text {
+  color: #4624F1;
+}
+
+#EmojiCatcherWelcomePopup section .EC-gif-container {
+  width: 520px;
+  border-radius: 6px;
+  box-shadow: 8px 8px #4624F1;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+#EmojiCatcherWelcomePopup section .EC-gif-container img {
+  display: block;
+  width: 100%;
+}
+
+#EmojiCatcherWelcomePopup section .EC-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  font-size: 24px;
+  font-family: "Bebas Neue", sans-serif;
+  color: #4624F1;
+  border: solid 2px #4624F1;
+  border-radius: 4px;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+/* ANIMATIONS */
 
 @keyframes emojiCatcherShowAndHide {
   0% {
@@ -78,6 +214,15 @@
   }
 }
 
+@keyframes emojiCatcherFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes emojiCatcherFloat {
   0% {
     opacity: 1;
@@ -89,5 +234,17 @@
   100% {
     opacity: 0;
     transform: translate(0, -50px);
+  }
+}
+
+@keyframes emojiCatcherShiny {
+  0% {
+    transform: rotate(45deg) scale(1, 1);
+  }
+  15% {
+    transform: rotate(45deg) scale(2, 2);
+  }
+  30%, 100% {
+    transform: rotate(45deg) scale(1, 1);
   }
 }

@@ -167,9 +167,37 @@ footer {
       user-select: none; }
       #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon {
         font-size: 24px;
-        margin-bottom: 8px; }
+        margin-bottom: 8px;
+        position: relative; }
         #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon.shiny {
-          text-shadow: 3px 3px #C8BDFF; }
+          text-shadow: 3px 3px #c8bdff; }
+        #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon .shiny-stars {
+          position: absolute;
+          top: 0;
+          right: 0; }
+          #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon .shiny-stars div {
+            background: #ffcc4d;
+            border: solid 1px #f9a52b;
+            transform: rotate(45deg);
+            position: absolute;
+            animation: linear shiny-animation 3s infinite; }
+            #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon .shiny-stars div:nth-child(1) {
+              height: 4px;
+              width: 4px;
+              top: 6px;
+              right: 4px; }
+            #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon .shiny-stars div:nth-child(2) {
+              height: 1px;
+              width: 1px;
+              top: 10px;
+              right: 0;
+              animation-delay: 200ms; }
+            #mainDisplay .emojis-display .emojis-grid .emoji .emoji-icon .shiny-stars div:nth-child(3) {
+              height: 2px;
+              width: 2px;
+              top: 14px;
+              right: 2px;
+              animation-delay: 400ms; }
       #mainDisplay .emojis-display .emojis-grid .emoji[data-title]::before, #mainDisplay .emojis-display .emojis-grid .emoji[data-rare-status]::after {
         content: attr(data-title);
         display: none;
@@ -192,6 +220,12 @@ footer {
         top: unset;
         bottom: 0;
         background-color: var(--primary-color); }
+      #mainDisplay .emojis-display .emojis-grid .emoji[data-rare-status] .rare-img {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        height: 14px; }
 #mainDisplay .achievements-display {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
@@ -245,5 +279,12 @@ footer {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+@keyframes shiny-animation {
+  0% {
+    transform: rotate(45deg) scale(1, 1); }
+  15% {
+    transform: rotate(45deg) scale(2, 2); }
+  30%, 100% {
+    transform: rotate(45deg) scale(1, 1); } }
 
 /*# sourceMappingURL=popup.css.map */

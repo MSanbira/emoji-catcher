@@ -9,6 +9,11 @@ const refreshBtn = document.querySelector(".refresh-btn");
 const statsBtn = document.querySelector(".stats-btn");
 const backBtn = document.querySelector(".back-btn");
 
+const rareStatusImgs = {
+  rare: "rare.png",
+  unique: "uniq.png",
+};
+
 const EmojiCatcher = {};
 
 EmojiCatcher.sortedEmojis = EmojiCatcherData.emojis.sort(
@@ -90,21 +95,29 @@ EmojiCatcher.setEmojiGrid = () => {
   EmojiCatcher.sortedEmojis.forEach((emojiObj) => {
     const emojiCount = EmojiCatcher.formattedNumber(emojiObj.emoji);
     if (!!emojiCount) {
-      const dataRareStr = `data-rare-status="${
-        EmojiCatcherData.rareStatuses[emojiObj.rareStatus]
-      }"`;
+      const rareStatusStr = EmojiCatcherData.rareStatuses[emojiObj.rareStatus];
+      const dataRareStr = `data-rare-status="${rareStatusStr}"`;
+      let rareImg = "";
+      if (rareStatusStr && rareStatusImgs[rareStatusStr]) {
+        rareImg = `<img class="rare-img" src="/assets/images/${rareStatusImgs[rareStatusStr]}" alt="🌟">`;
+      }
+      const isShiny = EmojiCatcher.isShiny(emojiObj.emoji);
       emojiGrid.innerHTML += `
             <div 
                 class="emoji" 
                 ${!!emojiObj.rareStatus && dataRareStr}
                 data-title="${emojiObj.title}"
             >
-                <div class='emoji-icon ${
-                  EmojiCatcher.isShiny(emojiObj.emoji) ? "shiny" : ""
-                }'>
+                <div class="emoji-icon ${isShiny && "shiny"}">
+                ${
+                  isShiny
+                    ? '<div class="shiny-stars"><div></div><div></div><div></div></div>'
+                    : ""
+                }
                     ${emojiObj.emoji}
                 </div>
                 ${emojiCount}
+                ${rareImg}
             </div>
         `;
     } else {
@@ -135,14 +148,17 @@ EmojiCatcher.setStats = () => {
     EmojiCatcher.savedData.points / EmojiCatcher.savedData.emojis.length;
   const statsAgg = {
     ...EmojiCatcher.savedData.stats,
-    avgTimeToClick: `${parseInt(EmojiCatcher.savedData.stats.avgTimeToClick * 100) / 100.0}s`,
+    avgTimeToClick: `${
+      parseInt(EmojiCatcher.savedData.stats.avgTimeToClick) / 1000.0
+    }s`,
     emojisCaught: EmojiCatcher.savedData.emojis.length,
     shinyCaught: EmojiCatcher.savedData.shiny.length,
     pointsPerClick: `${parseInt(avgPoints * 100) / 100.0} points`,
     achievements: `${EmojiCatcher.savedData.achievements.length}/${EmojiCatcherData.achievements.length}`,
   };
   for (const statDom of statsDoms) {
-    statDom.querySelector('.stats-data').innerText = statsAgg[statDom.getAttribute('data-stat-type')];
+    statDom.querySelector(".stats-data").innerText =
+      statsAgg[statDom.getAttribute("data-stat-type")];
   }
 };
 

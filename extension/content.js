@@ -8,12 +8,17 @@ EmojiCatcher.bugEmoji = {
   rareStatus: 3,
 };
 
-// Adding font
-EmojiCatcher.font = new FontFace(
+// Adding fonts
+EmojiCatcher.font1 = new FontFace(
   "Press Start 2P",
   "url('https://fonts.gstatic.com/s/pressstart2p/v9/e3t4euO8T-267oIAQAu6jDQyK3nVivNm4I81.woff2')"
 );
-document.fonts.add(EmojiCatcher.font);
+EmojiCatcher.font2 = new FontFace(
+  "Bebas Neue",
+  "url('https://fonts.gstatic.com/s/bebasneue/v2/JTUSjIg69CK48gW7PXoo9WdhyyTh89ZNpQ.woff2')"
+);
+document.fonts.add(EmojiCatcher.font1);
+document.fonts.add(EmojiCatcher.font2);
 
 EmojiCatcher.init = () => {
   // Click listener
@@ -54,7 +59,7 @@ EmojiCatcher.createEmoji = (emojiObj = EmojiCatcher.bugEmoji, isShiny) => {
     EmojiCatcher.emojiElement.setAttribute("id", "EmojiCatcherGameElement");
     EmojiCatcher.emojiElement.setAttribute("data-emoji", emojiObj.emoji);
     let emojiPoints = emojiObj.points;
-    if(isShiny) {
+    if (isShiny) {
       EmojiCatcher.emojiElement.setAttribute("data-is-shiny", isShiny);
       emojiPoints *= 100;
     }
@@ -67,9 +72,14 @@ EmojiCatcher.createEmoji = (emojiObj = EmojiCatcher.bugEmoji, isShiny) => {
     document.body.appendChild(EmojiCatcher.emojiElement);
 
     EmojiCatcher.emojiElement.innerHTML = `
-        <div class="EC-emoji-btn ${isShiny ? "shiny" : ""}">${
-      emojiObj.emoji
-    }</div>
+        <div class="EC-emoji-btn ${isShiny ? "shiny" : ""}">
+          ${emojiObj.emoji}
+        </div>
+        ${
+          isShiny
+            ? '<div class="EC-shiny-stars"><div></div><div></div><div></div></div>'
+            : ""
+        }
         <div class="EC-emoji-points">+${emojiPoints}</div>
     `;
 
@@ -91,10 +101,12 @@ EmojiCatcher.handleEmojiClick = (emoji) => {
     "data-is-shiny"
   );
   clearTimeout(EmojiCatcher.initialTimeout);
-  setTimeout(
-    () => EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove(),
-    1000
-  );
+  if (EmojiCatcher.isFirstEmoji) {
+    EmojiCatcher.openWelcomePopup();
+  }
+  setTimeout(() => {
+    EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove();
+  }, 1000);
 
   console.log(emoji, EmojiCatcher.msUntilClick);
   chrome.runtime.sendMessage({
@@ -102,7 +114,7 @@ EmojiCatcher.handleEmojiClick = (emoji) => {
     emoji: emoji,
     isFirstEmoji: EmojiCatcher.isFirstEmoji,
     msUntilClick: EmojiCatcher.msUntilClick,
-    isShiny: EmojiCatcher.isShiny
+    isShiny: EmojiCatcher.isShiny,
   });
 };
 
@@ -125,6 +137,38 @@ EmojiCatcher.createFirstEmoji = (emojiObj = EmojiCatcher.bugEmoji) => {
 
     EmojiCatcher.DateTimeWhenCreated = new Date().getTime();
   }
+};
+
+EmojiCatcher.openWelcomePopup = () => {
+  EmojiCatcher.welcomePopup = document.createElement("div");
+  EmojiCatcher.welcomePopup.setAttribute("id", "EmojiCatcherWelcomePopup");
+  const urlConffety = chrome.extension.getURL("assets/images/conffety.png");
+  const urlClose = chrome.extension.getURL("assets/images/close.svg");
+  const urlGif = chrome.extension.getURL("assets/images/gif-welcome.gif");
+  EmojiCatcher.welcomePopup.innerHTML = `
+    <header>
+      <img class="EC-header-bg" src="${urlConffety}" alt="bg">
+      <h1 class="EC-title">Welcome to Emoji Catcher!</h1>
+      <div class="EC-exit-btn"><img src="${urlClose}" alt="close"></div>
+    </header>
+    <section>
+      <p class="EC-sub-title">
+        Click the <span class="EC-blue-text">extension icon</span> whenever you</br> want to catch up on your progress
+      </p>
+      <div class="EC-gif-container"><img src="${urlGif}" alt="open extensions"></div>
+      <div class="EC-btn">awesome, got it!</div>
+    </section>
+  `;
+  document.body.appendChild(EmojiCatcher.welcomePopup);
+  EmojiCatcher.welcomePopup.addEventListener("click", (event) => {
+    if (
+      event.target.classList.contains("EC-btn") ||
+      event.target.classList.contains("EC-exit-btn") ||
+      event.target.parentElement.classList.contains("EC-exit-btn")
+    ) {
+      EmojiCatcher.welcomePopup.remove();
+    }
+  });
 };
 
 EmojiCatcher.init();
