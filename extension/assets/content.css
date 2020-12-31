@@ -145,7 +145,7 @@
 #EmojiCatcherWelcomePopup section .EC-sub-title {
   text-align: center;
   font-size: 24px;
-  font-family: "Bebas Neue", sans-serif;
+  font-family: "Bebas Neue", "Roboto", sans-serif;
   margin: 0 0 8px 0;
   text-transform: uppercase;
 }
@@ -173,7 +173,7 @@
   justify-content: center;
   padding: 16px;
   font-size: 24px;
-  font-family: "Bebas Neue", sans-serif;
+  font-family: "Bebas Neue", "Roboto", sans-serif;
   color: #4624F1;
   border: solid 2px #4624F1;
   border-radius: 4px;

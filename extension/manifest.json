@@ -2,7 +2,7 @@
   "name": "Emoji Catcher",
   "version": "1.0",
   "version_name": "1.0 Emoji Catcher alpha",
-  "description": "gotta catch them all",
+  "description": "Gotta catch them all",
   "manifest_version": 2,
   "icons": {
     "16": "assets/logos/LOGO-16.png",

@@ -13,12 +13,12 @@ EmojiCatcher.font1 = new FontFace(
   "Press Start 2P",
   "url('https://fonts.gstatic.com/s/pressstart2p/v9/e3t4euO8T-267oIAQAu6jDQyK3nVivNm4I81.woff2')"
 );
-EmojiCatcher.font2 = new FontFace(
+EmojiCatcher.fontBebas = new FontFace(
   "Bebas Neue",
   "url('https://fonts.gstatic.com/s/bebasneue/v2/JTUSjIg69CK48gW7PXoo9WdhyyTh89ZNpQ.woff2')"
 );
 document.fonts.add(EmojiCatcher.font1);
-document.fonts.add(EmojiCatcher.font2);
+document.fonts.add(EmojiCatcher.fontBebas);
 
 EmojiCatcher.init = () => {
   // Click listener
@@ -140,6 +140,8 @@ EmojiCatcher.createFirstEmoji = (emojiObj = EmojiCatcher.bugEmoji) => {
 };
 
 EmojiCatcher.openWelcomePopup = () => {
+  document.head.innerHTML += `<link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">`;
   EmojiCatcher.welcomePopup = document.createElement("div");
   EmojiCatcher.welcomePopup.setAttribute("id", "EmojiCatcherWelcomePopup");
   const urlConffety = chrome.extension.getURL("assets/images/conffety.png");
