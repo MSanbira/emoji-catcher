@@ -37,7 +37,7 @@ EmojiCatcher.init = () => {
 
   // Msg listener
   chrome.runtime.onMessage.addListener((req, _sender) => {
-    console.log("msg: ", req);
+    // console.log("msg: ", req);
     EmojiCatcher.handleMessage(req);
   });
 };
@@ -108,7 +108,7 @@ EmojiCatcher.handleEmojiClick = (emoji) => {
     EmojiCatcher.emojiElement && EmojiCatcher.emojiElement.remove();
   }, 1000);
 
-  console.log(emoji, EmojiCatcher.msUntilClick);
+  // console.log(emoji, EmojiCatcher.msUntilClick);
   chrome.runtime.sendMessage({
     action: "click",
     emoji: emoji,

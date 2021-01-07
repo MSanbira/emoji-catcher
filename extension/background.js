@@ -241,7 +241,7 @@ EmojiCatcher.setNewNextEmoji = () => {
 EmojiCatcher.sendMessage = (message) => {
   console.log("msg: ", message);
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.tabs.sendMessage(tabs[0].id, message);
+    tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, message));
   });
 };
 

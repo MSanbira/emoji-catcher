@@ -20,7 +20,7 @@ const EmojiCatcherData = {
     rareStatus: 3,
   },
   firstEmoji: "🍪",
-  rareStatuses: ['normal', 'spacial', 'rare', 'unique'],
+  rareStatuses: ['normal', 'special', 'rare', 'unique'],
   emojis: [
     // rare status 0 - 20/20
     {
