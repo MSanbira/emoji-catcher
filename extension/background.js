@@ -1,11 +1,12 @@
 const EmojiCatcher = {};
-EmojiCatcher.isTestMode = false;
+EmojiCatcher.isTestMode = true;
 EmojiCatcher.simulation = EmojiCatcher.isTestMode ? [] : [];
 EmojiCatcher.isResetSavedData = false;
 EmojiCatcher.msIntervalToNextEmoji =
   1000 * 60 * (EmojiCatcher.isTestMode ? 0.3 : 5);
 EmojiCatcher.shinyChance = EmojiCatcher.isTestMode ? 0.5 : 0.0001;
 EmojiCatcher.missedEmojis = 0;
+EmojiCatcher.nextEmojiTimeout = null;
 
 EmojiCatcher.totalChance = EmojiCatcherData.emojis.reduce(
   (accumulator, emoji) => {
@@ -23,6 +24,16 @@ EmojiCatcher.sortedEmojis = EmojiCatcherData.emojis.sort(
 EmojiCatcher.init = () => {
   // on installation
   chrome.runtime.onInstalled.addListener(function () {
+    EmojiCatcher.getSavedData(() => {
+      if (EmojiCatcher.savedData.emojis.length === 0) {
+        EmojiCatcher.onFirstInstall();
+      }
+    });
+
+    return false;
+  });
+
+  EmojiCatcher.onFirstInstall = () => {
     alert(
       `Thank you for installing Emoji Catcher 🏆\n\nWe will now redirect you to a fresh Google page to show you how the game is played ✌️`
     );
@@ -40,9 +51,7 @@ EmojiCatcher.init = () => {
         }),
       3000
     );
-
-    return false;
-  });
+  };
 
   EmojiCatcher.getIsPaused((isPaused) => {
     EmojiCatcher.isPaused = !!isPaused;
@@ -60,7 +69,7 @@ EmojiCatcher.init = () => {
   }
 
   chrome.runtime.onMessage.addListener((req, _sender) => {
-    console.log("msg: ", req);
+    console.log("req msg: ", req);
     EmojiCatcher.handleMessage(req);
   });
 };
@@ -77,6 +86,12 @@ EmojiCatcher.handleMessage = (req) => {
   }
   if (req.action === "isPausedChange") {
     EmojiCatcher.isPaused = req.isPaused;
+  }
+  if (req.action === "refresh") {
+    EmojiCatcher.getIsPaused((isPaused) => {
+      EmojiCatcher.isPaused = !!isPaused;
+      EmojiCatcher.getAndSetNextEmoji();
+    });
   }
 };
 
@@ -191,7 +206,11 @@ EmojiCatcher.getAndSetNextEmoji = () => {
     if (EmojiCatcher.nextEmoji) {
       const difference = EmojiCatcher.nextEmoji.dateTime - currentDateTime;
       if (difference > 0) {
-        setTimeout(EmojiCatcher.checkAndShowNextEmoji, difference);
+        clearTimeout(EmojiCatcher.nextEmojiTimeout);
+        EmojiCatcher.nextEmojiTimeout = setTimeout(
+          EmojiCatcher.checkAndShowNextEmoji,
+          difference
+        );
       } else {
         EmojiCatcher.setNewNextEmoji();
       }
@@ -202,24 +221,19 @@ EmojiCatcher.getAndSetNextEmoji = () => {
 };
 
 EmojiCatcher.checkAndShowNextEmoji = () => {
-  EmojiCatcher.getNextEmoji((nextEmoji) => {
-    if (
-      EmojiCatcher.nextEmoji.dateTime === nextEmoji.dateTime &&
-      !EmojiCatcher.isPaused
-    ) {
-      if (EmojiCatcher.awaitForClick) {
-        EmojiCatcher.missedEmojis++;
-      }
-      EmojiCatcher.awaitForClick = true;
-      EmojiCatcher.sendMessage({
-        action: "create",
-        emoji: EmojiCatcher.getEmojiObjByEmoji(nextEmoji.emoji),
-        isShiny: Math.random() < EmojiCatcher.shinyChance,
-      });
+  if (!EmojiCatcher.isPaused) {
+    if (EmojiCatcher.awaitForClick) {
+      EmojiCatcher.missedEmojis++;
     }
+    EmojiCatcher.awaitForClick = true;
+    EmojiCatcher.sendMessage({
+      action: "create",
+      emoji: EmojiCatcher.getEmojiObjByEmoji(EmojiCatcher.nextEmoji.emoji),
+      isShiny: Math.random() < EmojiCatcher.shinyChance,
+    });
+  }
 
-    EmojiCatcher.setNewNextEmoji();
-  });
+  EmojiCatcher.setNewNextEmoji();
 };
 
 EmojiCatcher.setNewNextEmoji = () => {
@@ -230,7 +244,8 @@ EmojiCatcher.setNewNextEmoji = () => {
     emoji: emoji,
   };
   EmojiCatcher.setNextEmoji();
-  setTimeout(
+  clearTimeout(EmojiCatcher.nextEmojiTimeout);
+  EmojiCatcher.nextEmojiTimeout = setTimeout(
     EmojiCatcher.checkAndShowNextEmoji,
     EmojiCatcher.msIntervalToNextEmoji
   );
@@ -240,8 +255,9 @@ EmojiCatcher.setNewNextEmoji = () => {
 
 EmojiCatcher.sendMessage = (message) => {
   console.log("msg: ", message);
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  chrome.tabs.query({ active: true }, (tabs) => {
     tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, message));
+    console.log("tabs: ", tabs);
   });
 };
 

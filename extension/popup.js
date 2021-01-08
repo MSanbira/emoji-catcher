@@ -37,6 +37,7 @@ function init() {
     refreshBtn.classList.add("spin");
     setTimeout(() => refreshBtn.classList.remove("spin"), 500);
     EmojiCatcher.refreshFromStorage();
+    chrome.runtime.sendMessage({action: "refresh"});
   });
 
   statsBtn.addEventListener("click", () => {
