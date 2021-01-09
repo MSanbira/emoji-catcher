@@ -244,7 +244,7 @@ const EmojiCatcherData = {
     {
       emoji: "💨",
       chance: 50,
-      title: "\"Gust of wind\"",
+      title: "\'Gust of wind\'",
       points: 80,
       rareStatus: 1,
     },

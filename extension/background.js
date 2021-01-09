@@ -1,5 +1,5 @@
 const EmojiCatcher = {};
-EmojiCatcher.isTestMode = true;
+EmojiCatcher.isTestMode = false;
 EmojiCatcher.simulation = EmojiCatcher.isTestMode ? [] : [];
 EmojiCatcher.isResetSavedData = false;
 EmojiCatcher.msIntervalToNextEmoji =
